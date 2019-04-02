@@ -28,6 +28,10 @@ nodejs and npm. I think npm distributes node with their sofware so you should tr
 
 1. Run __init.sh__ to populate user credentials
 2. In the root of the project: 
-        $mongod --dbpath=.data/db --port 27018
+```bash
+$mongod --dbpath=.data/db --port 27018
+```
 3. In another terminal/session in the root of the project:
-        $npm run start
+```bash
+$npm run start
+```

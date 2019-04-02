@@ -29,14 +29,30 @@ function djb2(str){
   return hash;
 }
 
-const getBcolorFcolor = (mongoose_id) => {
-  let hash = mongoose_id.toString().substring(5,11)
+const getBcolorFcolor = (x) => {
+  let hash = intToRGB(hashCode(x))
   let r = parseInt(hash.substring(0, 2), 16)
   let g = parseInt(hash.substring(2, 4), 16)
   let b = parseInt(hash.substring(4, 6), 16)
   let text = ((r * 0.299) + (g * 0.587) + (b * 0.114)) > 186 ? "#000000" : "#FFFFFF"
   hash = "#"+hash
   return ({hash, text})
+}
+
+function hashCode(str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+}
+
+function intToRGB(i){
+    var c = (i & 0x00FFFFFF)
+        .toString(16)
+        .toUpperCase();
+
+    return "00000".substring(0, 6 - c.length) + c;
 }
 %>
 <div class="side-nav" style="position:absolute; z-index:2;">
@@ -311,14 +327,14 @@ const getBcolorFcolor = (mongoose_id) => {
                       <img style="max-height:100px;" src="<%= comment.user_media_path + comment.user_id %>" alt="user image">
                     <% } %>
                   </div>
-                  <div> <%= comment.uname %> </div>
+                  <div style="color:<%=getBcolorFcolor(comment.uname).text%>;background-color:<%=getBcolorFcolor(comment.uname).hash%>"> <%= comment.uname %> </div>
                 </div>
               </div>
               <div class="col s8">
                 <div class="card grey lighten-3">
                   <div style="text-align:right;" class="grey lighten-2">
                      <span id="date"><%=formatDate(comment.time)%></span>
-                     <span style="background-color:<%=getBcolorFcolor(comment._id).hash%>;color:<%=getBcolorFcolor(comment._id).text%>;">ID: <%= comment._id %> </span>
+                     <span style="color:green">(ID: <%= comment._id %>)</span>
                   </div>
                   <span style="margin-left:10px"><%= comment.comment %></span>
                 </div>
@@ -524,14 +540,30 @@ const formatDate = (date) => {
   return `${l[0]}/${l[1]}/${date.getFullYear().toString().substring(2,4)}(${days[date.getDay()]})${l[2]}:${l[3]}:${l[4]}`
 }
 
-const getBcolorFcolor = (mongoose_id) => {
-  let hash = mongoose_id.toString().substring(5,11)
+const getBcolorFcolor = (x) => {
+  let hash = intToRGB(hashCode(x))
   let r = parseInt(hash.substring(0, 2), 16)
   let g = parseInt(hash.substring(2, 4), 16)
   let b = parseInt(hash.substring(4, 6), 16)
   let text = ((r * 0.299) + (g * 0.587) + (b * 0.114)) > 186 ? "#000000" : "#FFFFFF"
   hash = "#"+hash
   return ({hash, text})
+}
+
+function hashCode(str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+}
+
+function intToRGB(i){
+    var c = (i & 0x00FFFFFF)
+        .toString(16)
+        .toUpperCase();
+
+    return "00000".substring(0, 6 - c.length) + c;
 }
 
 const postAndUpdate = (url) => {
@@ -555,14 +587,14 @@ const postAndUpdate = (url) => {
             <div stlye="display:block">` +
             (x.user_media_path == null ? '<i class="medium material-icons">account_circle</i>' : `<img style="max-height:100px;" src="${x.user_media_path}${x.user_id}" alt="user image">`) +
             `</div>
-              <div> ${x.uname} </div>
+              <div style="color:${getBcolorFcolor(x.uname).text};background-color:${getBcolorFcolor(x.uname).hash}"> ${x.uname} </div>
             </div>
             </div>
             <div class="col s8">
               <div class="card grey lighten-3">
                 <div style="text-align:right" class="grey lighten-2">
                   <span id="date">` + formatDate(new Date(x.time)) + `</span>
-                  <span style="background-color:${getBcolorFcolor(x._id).hash};color:${getBcolorFcolor(x._id).text};">ID: ${x._id} <span>
+                  <span style="color:green;">(ID: ${x._id})</span>
                 </div>
                 <span style="margin-left:10px">${x.comment}</span>
               </div>
@@ -573,6 +605,7 @@ const postAndUpdate = (url) => {
 
   })
 }
+
 
 const getAndUpdate = (url) => {
   $.ajax({
@@ -590,14 +623,14 @@ const getAndUpdate = (url) => {
             <div stlye="display:block">` +
             (x.user_media_path == null ? '<i class="medium material-icons">account_circle</i>' : `<img style="max-height:100px;" src="${x.user_media_path}${x.user_id}" alt="user image">`) +
             `</div>
-              <div> ${x.uname} </div>
+              <div style="color:${getBcolorFcolor(x.uname).text};background-color:${getBcolorFcolor(x.uname).hash}"> ${x.uname} </div>
             </div>
             </div>
             <div class="col s8">
               <div class="card grey lighten-3">
                 <div style="text-align:right" class="grey lighten-2">
                   <span id="date">` + formatDate(new Date(x.time)) + `</span>
-                  <span style="background-color:${getBcolorFcolor(x._id).hash};color:${getBcolorFcolor(x._id).text};">ID: ${x._id} <span>
+                  <span style="color:green;">(ID: ${x._id})</span>
                 </div>
                 <span style="margin-left:10px">${x.comment}</span>
               </div>
