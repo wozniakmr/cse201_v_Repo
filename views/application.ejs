@@ -1,0 +1,611 @@
+<%
+const capPhrase = (phrase) => {
+  return phrase.trim().split(' ').map(x => x[0].toUpperCase().concat(x.substring(1, x.length))).join(' ');
+}
+const cap = (phrase) => {
+  if (phrase === 'rpg' || phrase === 'fps') {
+    return phrase.toUpperCase()
+  }
+  return phrase.split(' ').map(x => x[0].toUpperCase().concat(x.substring(1, x.length))).join(' ');
+}
+const formatDate = (date) => {
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+  let month = (date.getMonth()+1).toString()
+  let day = (date.getDate()).toString()
+  let hour = (date.getHours()).toString()
+  let min = (date.getMinutes()).toString()
+  let sec = (date.getSeconds()).toString()
+  l = [month, day, hour, min, sec]
+  l = l.map(x => x.length == 1 ? '0' + x : x)
+
+  return `${l[0]}/${l[1]}/${date.getFullYear().toString().substring(2,4)}(${days[date.getDay()]})${l[2]}:${l[3]}:${l[4]}`
+}
+function djb2(str){
+  var hash = 5381;
+  for (var i = 0; i < str.length; i++) {
+    hash = ((hash << 5) + hash) + str.charCodeAt(i); /* hash * 33 + c */
+  }
+  return hash;
+}
+
+const getBcolorFcolor = (mongoose_id) => {
+  let hash = mongoose_id.toString().substring(5,11)
+  let r = parseInt(hash.substring(0, 2), 16)
+  let g = parseInt(hash.substring(2, 4), 16)
+  let b = parseInt(hash.substring(4, 6), 16)
+  let text = ((r * 0.299) + (g * 0.587) + (b * 0.114)) > 186 ? "#000000" : "#FFFFFF"
+  hash = "#"+hash
+  return ({hash, text})
+}
+%>
+<div class="side-nav" style="position:absolute; z-index:2;">
+  <div class="user-box card-panel blue-grey lighten-4">
+
+    <% if (typeof user == 'undefined') { %>
+      <div class="signin-box">
+        <form id="login-form" action="/user/login" method="POST">
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="uname" name="uname" type="text" class="validate" required="">
+              <label for="uname">Username</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="pass" name="pass" type="password" class="validate" required="">
+              <label for="pass">Password</label>
+            </div>
+          </div>
+          <button id="login-button" class="btn waves-effect waves-light col s6 light-blue accent-1" type="submit">Sign In
+            <i class="material-icons right">send</i>
+          </button>
+
+          <button class="btn waves-effect waves-light red accent-1" id="signup">Sign Up
+              <i class="material-icons right">person_add</i>
+          </button>
+
+        </form>
+      </div>
+    <% } %>
+
+    <% if (typeof user != 'undefined') { %>
+      <a href="/user/logout">
+        <button id="logout-button" class="btn waves-effect waves-light col s6 red">Signout
+          <i class="material-icons right">send</i>
+        </button>
+      </a>
+
+      <hr>
+
+      <div class="user-name-container row" style="font-size:1.5em;">
+        <% if (user.media_path == null) { %>
+          <div clas="col s5"><i class="large material-icons" style="vertical-align:middle;float:left;">account_circle</i></div>
+        <% } else { %>
+          <div class="col s5"><img src="<%=user.media_path + user._id %>" class="responsive-img" style="vertical-align:middle;max-height:140px;"></div>
+        <% } %>
+        <div class="col s7" style="text-align:right;">
+          <div style=""> <%=cap(user.fname) %> </div>
+        </div>
+      </div>
+
+      <% if(user.group === 'admin') { %>
+        <hr>
+        <a href="/pre_applications" class="btn-floating btn-small waves-effect waves-light green accent-3">
+          <i class="material-icons" style="color:black;">folder_open</i>
+        </a>
+      <% } %>
+
+    <% } %>
+
+    <hr>
+
+    <div class="sort-header" style="font-size:1.2em; text-align:right;">
+      <i class="small material-icons" style="vertical-align:middle;float:left;">sort</i>
+      <span style="margin-right:20px;">Sort By...</span>
+    </div>
+
+    <br>
+
+    <div class="sort-content" style="text-align:left; color:#33691e">
+      <a href="/applications/sort/price_hl">Price Low-High</a> <br>
+      <a href="/applications/sort/price_lh">Price High-Low</a> <br>
+      <a href="/applications/sort/newest">Newest</a> <br>
+      <a href="/applications">Alphabetical</a> <br>
+      <a href="/applications/sort/reverse_alpha">Reverse Alphabetical</a>
+    </div>
+
+    <hr>
+
+    <div class="filter-header" style="font-size:1.2em; text-align: right;">
+      <i class="small material-icons" style="vertical-align:middle;float:left;">filter_list</i>
+      <span style="margin-right:20px">Filter By...</span>
+    </div>
+
+    <br>
+
+    <div class="filter-content" style="text-align:left; color:#33691e">
+      Platform <br>
+      <a class="filter-element" href="/applications/platform/linux"> <span class="platform-img"><img src="/public/assets/icon_platform_linux_dark.png"> </span> </a>
+      <a class="filter-element" href="/applications/platform/macos"> <span class="platform-img"><img src="/public/assets/icon_platform_mac_dark.png"> </span> </a>
+      <a class="filter-element" href="/applications/platform/windows"> <span class="platform-img"><img src="/public/assets/icon_platform_win_dark.png"> </span> </a> <br>
+      Genre <br>
+      <a class="filter-element" href="/applications/genre/rpg">RPG</a> <br>
+      <a class="filter-element" href="/applications/genre/fps">FPS</a> <br>
+      <a class="filter-element" href="/applications/genre/action">Action</a> <br>
+      <a class="filter-element" href="/applications/genre/adventure ">Adventure</a> <br>
+      <a class="filter-element" href="/applications/genre/casual">Casual</a> <br>
+      <a class="filter-element" href="/applications/genre/strategy">Strategy</a> <br>
+      Popular Tags <br>
+      <% let tags = []; let tag_count = 0;
+      for (let i in applications) {
+         for (tag of applications[i].tags) {
+           if (tag_count > 20) break
+           if (! tags.includes(tag)) {
+             tags.push(tag)
+             tag_count++
+          }
+        }
+      }%>
+      <div class="app-tags">
+      <% for (tag of tags) {%>
+        <a href="/applications/tags/<%=tag%>"> <div class="tag blue darken-3 z-depth-1"> <%=cap(tag) %> </div> </a>
+      <%}%>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="row nav-wrapper blue-grey darken-3">
+    <div class="col s1">
+      <button class="btn-floating btn-large waves-effect waves-light menu" style="z-index:2;" onclick="toggleMenu()"><i class="material-icons menu-icon">menu</i></button>
+    </div>
+    <div class="col s2">
+      <a class="logo" href="/applications">v_Repo</a>
+    </div>
+
+    <div class="col s8 input-field">
+      <i class="material-icons prefix">search</i>
+      <input type="text" id="autocomplete-input" class="autocomplete">
+      <label for="autocomplete-input">Search</label>
+    </div>
+  </div>
+</nav>
+
+<% if(success_msg != '') { %>
+  <div class="row" style="position:absolute; z-index:3;">
+    <div id="success_msg" class="col s8 offset-s12 card green accent-3" style="text-align:center;color:black;opacity:0.9;">
+      <%= success_msg %>
+    </div>
+  </div>
+<% } %>
+
+<% if(error != '') { %>
+<div class="row" style="position:absolute; z-index:3;">
+  <div id="success_msg" class="col s8 offset-s12 card red accent-3" style="text-align:center;color:black;opacity:0.9;">
+    <%= error %>
+  </div>
+</div>
+<% } %>
+
+<div class="body">
+  <div class="container">
+    <div class="cards">
+      <% let id = application._id %>
+      <% let date = application.release %>
+      <% let hyperlink = application.hyperlink %>
+      <% let developer = application.developer %>
+
+      <div class="section row">
+        <div class="col s12 m12 l10 offset-l1">
+          <div class="card blue-grey darken-1">
+
+
+            <div class="card-image">
+              <img src="/public/media/<%= id %>" alt="">
+            </div>
+
+            <div class="card-content">
+              <span class="card-title"> <%= capPhrase(application.title) %> </span>
+
+              <p class="card-description">
+                <%= application.desc %>
+              </p>
+
+              <hr>
+
+              <div class="container">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>Genre</td>
+                      <td><%= application.genre %></td>
+                    </tr>
+                    <tr>
+                      <td>Developer</td>
+                      <td><%= capPhrase(developer) %></td>
+                    </tr>
+                    <tr>
+                      <td>Publisher</td>
+                      <td><%= capPhrase(application.publisher) %></td>
+                    </tr>
+                    <tr>
+                      <td>Release</td>
+                      <td><%=date.getMonth()%>/<%=date.getDate()%>/<%=date.getFullYear()%></td>
+                    </tr>
+                    <tr>
+                      <td>ESRB Rating</td>
+                      <td><%= capPhrase(application.rating) %></td>
+                    </tr>
+                    <tr>
+                      <td>Version</td>
+                      <td><%= application.version %></td>
+                    </tr>
+                    <tr>
+                      <td>Price</td>
+                      <td>$<%= application.price %></td>
+                    </tr>
+                    <tr>
+                      <td>Hyperlink</td>
+                      <td><a class="truncate" href="<%=hyperlink%>">link</a></td>
+                    </tr>
+                    <tr>
+                      <td>Platforms</td>
+                      <td>
+                        <span class="app-platforms">
+                          <%for (let platform of application.platform) {%>
+                            <%if (platform == 'linux') {%>
+                              <span class="platform-img"><img src="/public/assets/icon_platform_linux.png"> </span>
+                            <%}%>
+                            <%if (platform == 'macos') {%>
+                              <span class="platform-img"><img src="/public/assets/icon_platform_mac.png"> </span>
+                            <%}%>
+                            <%if (platform == 'windows') {%>
+                              <span class="platform-img"><img src="/public/assets/icon_platform_win.png"> </span>
+                            <%}%>
+                          <%}%>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <hr>
+
+              <div class="app-tags">
+                <% tag_count = 0 %>
+                <%for (tag of application.tags) {%>
+                  <% tag_count++; %>
+                  <a href="/applications/tags/<%=tag%>"> <div class="tag blue darken-3 z-depth-1"> <%=cap(tag) %> </div> </a>
+                  <%if (tag_count == 3) {%> <br> <%}%>
+                <%}%>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
+  </div>
+
+  <div class="comments-container">
+    <div class="row">
+      <div class="col s12 m12 l10 offset-l1">
+        <div class="card yellow lighten-5">
+        <span class="card-title" style='color:#e53935; margin-left:10px;'>Comments</span>
+        <hr>
+        <div class="comments">
+        <% if (comments.length > 0) { %>
+          <% for (comment of comments) { %>
+            <div class="row">
+              <% if (typeof user != 'undefined' && user.group === 'mod') { %>
+                <a onclick="getAndUpdate('/applications/id/<%=application._id%>/del/<%=comment._id%>')" class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">remove</i></a>
+              <% } %>
+              <div class="col s3">
+                <div style="text-align:center;">
+                  <div stlye="display:block">
+                    <% if (comment.user_media_path == null) { %>
+                      <i class="medium material-icons">account_circle</i>
+                    <% } else { %>
+                      <img style="max-height:100px;" src="<%= comment.user_media_path + comment.user_id %>" alt="user image">
+                    <% } %>
+                  </div>
+                  <div> <%= comment.uname %> </div>
+                </div>
+              </div>
+              <div class="col s8">
+                <div class="card grey lighten-3">
+                  <div style="text-align:right;" class="grey lighten-2">
+                     <span id="date"><%=formatDate(comment.time)%></span>
+                     <span style="background-color:<%=getBcolorFcolor(comment._id).hash%>;color:<%=getBcolorFcolor(comment._id).text%>;">ID: <%= comment._id %> </span>
+                  </div>
+                  <span style="margin-left:10px"><%= comment.comment %></span>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        <% } else { %>
+          <span style="font-size:2.5em;color:#e53935;">No Comments Yet...</span>
+          <br> <br>
+        <% } %>
+        </div>
+        <% if (typeof user != 'undefined') { %>
+        <div class="row">
+
+          <div class="col s4 offset-s10">
+            <a class="btn-floating btn-medium waves-effect waves-light red" onclick="makeComment()">
+              <i class="material-icons">add</i>
+            </a>
+            <a class="hide-comment btn-floating btn-medium waves-effect waves-light red" onclick="hideComment()">
+              <i class="material-icons">remove</i>
+            </a>
+          </div>
+
+        </div>
+        <div class="comment-block">
+          <div class="row">
+            <div class="col s3">
+              <div style="text-align:center;">
+                <div stlye="display:block">
+                  <% if (user.media_path == null) { %>
+                    <i class="medium material-icons">account_circle</i>
+                  <% } else { %>
+                    <img style="max-height:100px;" src="<%= user.media_path + user.id %>" alt="user image">
+                  <% } %>
+                </div>
+                <div> <%= user.uname %> </div>
+              </div>
+            </div>
+            <div class="col s8">
+              <div class="card grey lighten-3">
+                <form id="comment-form" style="font-size:10pt" action="/applications/id/<%=application._id%>/comment" method="POST">
+                  <div class="input-field">
+                    <label for="content">Comment</label>
+                    <textarea style="font-size:12pt;" id="content" name="content" class="materialize-textarea" required=""></textarea>
+                  </div>
+                  <div style="float:right;">
+                  <button id="submit-button" class="btn waves-effect waves-light red" type="submit"
+                  onclick="postAndUpdate('/applications/id/<%=application._id%>/comment')">Submit
+                    <i class="material-icons right">send</i>
+                  </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% } %>
+        <br>
+        <hr>
+        <br>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<style>
+  .side-nav {
+    padding-top: 60px;
+    opacity: 0.9;
+  }
+  .side-nav * {
+    color: black;
+  }
+  .filter-element {
+    margin-left:10px;
+  }
+  .filter-element:hover {
+    color: green;
+  }
+  .sort-content a:hover {
+    color: green;
+  }
+
+  .top-container {
+    height: 60px;
+    width: 80%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .card-image img {
+    max-width: 460px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+  }
+
+  .app-tags {
+    text-align: center;
+    margin: auto;
+    width: 80%;
+  }
+  .tag {
+    color: white;
+    display: inline-block;
+    padding: 3px;
+    margin: 5px 10px 5px 0px;
+    transition: transform 300ms cubic-bezier(0, 0, 0, 1);
+  }
+  .tag:hover {
+    transform: scaleX(1.1) scaleY(1.1);
+  }
+  * {
+    color: white;
+  }
+
+  .card-panel {
+    position: relative;
+    /* width: 200px; */
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 1000px) {
+    .card-panel {
+      width: 325px;
+    }
+  }
+  @media screen and (min-width: 1000px) {
+    .card-panel {
+      width: 300px;
+    }
+  }
+
+  .comments-container * {
+    color: black;
+  }
+  #date {
+    margin-right: 5px;
+  }
+</style>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous">
+</script>
+
+<!-- TODO: This might be temporary. Ideally, we actually use the autocomplete features -->
+<!-- TODO: Currently, it's just doing a search by title. -->
+<script>
+$(".side-nav").hide()
+$(".comment-block").hide()
+$(".hide-comment").hide()
+
+$("#autocomplete-input").keyup(function(event) {
+  if (event.keyCode === 13) {
+      location.href = '/applications/title/'+$('#autocomplete-input').val();
+  }
+});
+
+const toggleMenu = () => {
+  $(".side-nav").toggle()
+}
+$('.body').click( () => {
+  $(".side-nav").hide()
+})
+
+$("#signup").click(function(e) {
+  e.preventDefault();
+  location.href = '/user/signup'
+});
+
+const makeComment = () => {
+  $(".comment-block").show()
+  $(".hide-comment").show()
+}
+
+const hideComment = () => {
+  $(".comment-block").hide()
+  $('.hide-comment').hide()
+}
+
+$("#submit-button").click(function(e) {
+  e.preventDefault();
+})
+
+const formatDate = (date) => {
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+  let month = (date.getMonth()+1).toString()
+  let day = (date.getDate()).toString()
+  let hour = (date.getHours()).toString()
+  let min = (date.getMinutes()).toString()
+  let sec = (date.getSeconds()).toString()
+  l = [month, day, hour, min, sec]
+  l = l.map(x => x.length == 1 ? '0' + x : x)
+
+  return `${l[0]}/${l[1]}/${date.getFullYear().toString().substring(2,4)}(${days[date.getDay()]})${l[2]}:${l[3]}:${l[4]}`
+}
+
+const getBcolorFcolor = (mongoose_id) => {
+  let hash = mongoose_id.toString().substring(5,11)
+  let r = parseInt(hash.substring(0, 2), 16)
+  let g = parseInt(hash.substring(2, 4), 16)
+  let b = parseInt(hash.substring(4, 6), 16)
+  let text = ((r * 0.299) + (g * 0.587) + (b * 0.114)) > 186 ? "#000000" : "#FFFFFF"
+  hash = "#"+hash
+  return ({hash, text})
+}
+
+const postAndUpdate = (url) => {
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: {
+      content: $("#content").val()
+    }
+  }).done(function(resp) {
+    console.log('resp:', resp)
+    $(".comments").html("")
+    $("#content").val("")
+    hideComment()
+    resp.comments.forEach((x) => {
+      $(".comments").append(
+        `<div class="row">` +
+        (typeof resp.user != 'undefined' && resp.user.group === 'mod' ? `<a onclick="getAndUpdate('/applications/id/${resp.application._id}/del/${x._id}')" class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">remove</i></a>` : '') +
+        `<div class="col s3">
+          <div style="text-align:center;">
+            <div stlye="display:block">` +
+            (x.user_media_path == null ? '<i class="medium material-icons">account_circle</i>' : `<img style="max-height:100px;" src="${x.user_media_path}${x.user_id}" alt="user image">`) +
+            `</div>
+              <div> ${x.uname} </div>
+            </div>
+            </div>
+            <div class="col s8">
+              <div class="card grey lighten-3">
+                <div style="text-align:right" class="grey lighten-2">
+                  <span id="date">` + formatDate(new Date(x.time)) + `</span>
+                  <span style="background-color:${getBcolorFcolor(x._id).hash};color:${getBcolorFcolor(x._id).text};">ID: ${x._id} <span>
+                </div>
+                <span style="margin-left:10px">${x.comment}</span>
+              </div>
+              </div>
+            </div>`
+        )
+    })
+
+  })
+}
+
+const getAndUpdate = (url) => {
+  $.ajax({
+    type: "GET",
+    url: url
+  }).done(function(resp) {
+    console.log(resp)
+    $(".comments").html("")
+    resp.comments.forEach((x) => {
+      $(".comments").append(
+        `<div class="row">` +
+        (typeof resp.user != 'undefined' && resp.user.group === 'mod' ? `<a onclick="getAndUpdate('/applications/id/${resp.application._id}/del/${x._id}')" class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">remove</i></a>` : '') +
+        `<div class="col s3">
+          <div style="text-align:center;">
+            <div stlye="display:block">` +
+            (x.user_media_path == null ? '<i class="medium material-icons">account_circle</i>' : `<img style="max-height:100px;" src="${x.user_media_path}${x.user_id}" alt="user image">`) +
+            `</div>
+              <div> ${x.uname} </div>
+            </div>
+            </div>
+            <div class="col s8">
+              <div class="card grey lighten-3">
+                <div style="text-align:right" class="grey lighten-2">
+                  <span id="date">` + formatDate(new Date(x.time)) + `</span>
+                  <span style="background-color:${getBcolorFcolor(x._id).hash};color:${getBcolorFcolor(x._id).text};">ID: ${x._id} <span>
+                </div>
+                <span style="margin-left:10px">${x.comment}</span>
+              </div>
+              </div>
+            </div>`
+      )
+    })
+  })
+}
+
+</script>

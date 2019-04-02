@@ -1,0 +1,175 @@
+<%
+const capPhrase = (phrase) => {
+  return phrase.trim().split(' ').map(x => x[0].toUpperCase().concat(x.substring(1, x.length))).join(' ');
+}
+const cap = (phrase) => {
+  if (phrase === 'rpg' || phrase === 'fps') {
+    return phrase.toUpperCase()
+  }
+  return phrase.split(' ').map(x => x[0].toUpperCase().concat(x.substring(1, x.length))).join(' ');
+}
+%>
+<nav>
+  <div class="row nav-wrapper blue-grey darken-3">
+    <div class="col s2 offset-s1">
+      <a class="logo" href="/applications">v_Repo</a>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <div class="cards">
+    <%for (let i in applications) {%>
+      <% let id = applications[i]._id %>
+      <% let date = applications[i].release %>
+      <% let hyperlink = applications[i].hyperlink %>
+      <% let developer = applications[i].developer %>
+
+      <div class="section row">
+        <div class="col s12 m12 l10 offset-l1">
+          <div class="card blue-grey darken-1">
+
+
+            <div class="card-image">
+              <img src="/public/media/uploads/<%= id %>" alt="">
+            </div>
+
+            <div class="card-content">
+              <span class="card-title"> <%= capPhrase(applications[i].title) %> </span>
+
+              <p class="card-description">
+                <%= applications[i].desc %>
+              </p>
+
+              <hr>
+
+              <div class="container">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>Genre</td>
+                      <td><%= applications[i].genre %></td>
+                    </tr>
+                    <tr>
+                      <td>Developer</td>
+                      <td><%= capPhrase(developer) %></td>
+                    </tr>
+                    <tr>
+                      <td>Publisher</td>
+                      <td><%= capPhrase(applications[i].publisher) %></td>
+                    </tr>
+                    <tr>
+                      <td>Release</td>
+                      <td><%=date.getMonth()%>/<%=date.getDate()%>/<%=date.getFullYear()%></td>
+                    </tr>
+                    <tr>
+                      <td>ESRB Rating</td>
+                      <td><%= capPhrase(applications[i].rating) %></td>
+                    </tr>
+                    <tr>
+                      <td>Version</td>
+                      <td><%= applications[i].version %></td>
+                    </tr>
+                    <tr>
+                      <td>Price</td>
+                      <td>$<%= applications[i].price %></td>
+                    </tr>
+                    <tr>
+                      <td>Hyperlink</td>
+                      <td><a class="truncate" href="<%=hyperlink%>">link</a></td>
+                    </tr>
+                    <tr>
+                      <td>Platforms</td>
+                      <td>
+                        <span class="app-platforms">
+                          <%for (let platform of applications[i].platform) {%>
+                            <%if (platform == 'linux') {%>
+                              <span class="platform-img"><img src="/public/assets/icon_platform_linux.png"> </span>
+                            <%}%>
+                            <%if (platform == 'macos') {%>
+                              <span class="platform-img"><img src="/public/assets/icon_platform_mac.png"> </span>
+                            <%}%>
+                            <%if (platform == 'windows') {%>
+                              <span class="platform-img"><img src="/public/assets/icon_platform_win.png"> </span>
+                            <%}%>
+                          <%}%>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <hr>
+
+              <div class="app-tags">
+                <% let tag_count = 0 %>
+                <%for (tag of applications[i].tags) {%>
+                  <% tag_count++; %>
+                  <a href="/applications/tags/<%=tag%>"> <div class="tag blue darken-3 z-depth-1"> <%=cap(tag) %> </div> </a>
+                  <%if (tag_count == 3) {%> <br> <%}%>
+                <%}%>
+              </div>
+
+              <hr>
+
+              <div class="actions">
+                <!-- TODO: I'm not adding an edit feature unless it's requested -->
+                <!-- <a class="btn-floating waves-effect waves-light blue">
+                  <i class="material-icons">edit</i>
+                </a> -->
+                <a href="/pre_applications/deny/<%= id %>" class="btn-floating waves-effect waves-light red">
+                  <i class="material-icons">delete</i>
+                </a>
+                <a href="/pre_applications/approve/<%= id %>" class="btn-floating waves-effect waves-light green">
+                  <i class="material-icons">add</i>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+
+
+    <%}%>
+  </div>
+</div>
+
+<style>
+
+  .cards {
+    color: white;
+  }
+
+  .card-image {
+
+  }
+  .card-image img {
+    max-width: 460px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+  }
+  .actions {
+    padding-left: 80%;
+  }
+
+  .app-tags {
+    text-align: center;
+    margin: auto;
+    width: 80%;
+  }
+  .tag {
+    color: white;
+    display: inline-block;
+    padding: 3px;
+    margin: 5px 10px 5px 0px;
+    transition: transform 300ms cubic-bezier(0, 0, 0, 1);
+  }
+  .tag:hover {
+    transform: scaleX(1.1) scaleY(1.1);
+  }
+
+</style>

@@ -1,0 +1,126 @@
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- Google materialize icons -->
+ <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+ <nav>
+   <div class="row nav-wrapper blue-grey darken-3">
+     <div class="col s2 offset-s1">
+       <a class="logo" href="/applications">v_Repo</a>
+     </div>
+   </div>
+ </nav>
+
+<br>
+
+<div class="form-body container">
+      <div class="card grey lighten-5">
+        <div class="card-content black-text">
+
+          <span class="card-title">Submit a request</span>
+
+          <form class="col s12" method="POST" action="/pre_applications" enctype="multipart/form-data">
+
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="title" name="title" type="text" class="validate" required="">
+                <label for="title">Title</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="genre" name="genre" type="text" class="validate" required="">
+                <label for="genre">Genre</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s8">
+                <input id="platform" name="platform" type="text" class="validate" required="">
+                <label for="platform">Platforms seperated by commas</label>
+              </div>
+
+              <div class="input-field col s4">
+                <input id="release" name="release" type="text" class="validate" required="">
+                <label for="release">Date MM/DD/YY</label>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="developer" name="developer" type="text" class="validate" required="">
+                <label for="developer">Developer</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="publisher" name="publisher" type="text" class="validate" required="">
+                <label for="publisher">Publisher</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s3">
+                <input id="version" name="version" type="text" class="validate" required="">
+                <label for="version">Version</label>
+              </div>
+              <div class="input-field col s3">
+                <input id="price" name="price" type="text" class="validate" required="">
+                <label for="price">Price</label>
+              </div>
+              <div class="input-field col s3">
+                <input id="rating" name="rating" type="text" class="validate" required="">
+                <label for="rating">ESRB Rating</label>
+              </div>
+              <div class="input-field col s3">
+                <input id="hyperlink" name="hyperlink" type="text" class="validate" required="">
+                <label for="hyperlink">Hyperlink</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="tags" name="tags" type="text" class="validate" required="">
+                <label for="tags">Tags seperated by commas</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s12">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="materialize-textarea" required=""></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="file-field input-field col s12">
+                <div class="btn">
+                  <span>Browse</span>
+                  <input type="file" name="image" required="">
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" type="text" placeholder="Upload a cover image">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <button class="btn waves-effect waves-light" type="submit">Submit
+                <i class="material-icons right">send</i>
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+</div>
+
+<style>
+  .btn {
+    float: right;
+    margin-right: 20px;
+  }
+
+
+</style>

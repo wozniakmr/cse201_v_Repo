@@ -1,0 +1,361 @@
+<%
+const cap = (phrase) => {
+  if (phrase === 'rpg' || phrase === 'fps') {
+    return phrase.toUpperCase()
+  }
+  return phrase.split(' ').map(x => x[0].toUpperCase().concat(x.substring(1, x.length))).join(' ');
+}
+
+%>
+<div class="side-nav" style="position:absolute; z-index:2;">
+  <div class="user-box card-panel blue-grey lighten-4">
+
+    <% if (typeof user == 'undefined') { %>
+      <div class="signin-box">
+        <form id="login-form" action="/user/login" method="POST">
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="uname" name="uname" type="text" class="validate" required="">
+              <label for="uname">Username</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="pass" name="pass" type="password" class="validate" required="">
+              <label for="pass">Password</label>
+            </div>
+          </div>
+          <button id="login-button" class="btn waves-effect waves-light col s6 light-blue accent-1" type="submit">Sign In
+            <i class="material-icons right">send</i>
+          </button>
+
+          <button class="btn waves-effect waves-light red accent-1" id="signup">Sign Up
+              <i class="material-icons right">person_add</i>
+          </button>
+
+        </form>
+      </div>
+    <% } %>
+
+    <% if (typeof user != 'undefined') { %>
+      <a href="/user/logout">
+        <button id="logout-button" class="btn waves-effect waves-light col s6 red">Signout
+          <i class="material-icons right">send</i>
+        </button>
+      </a>
+
+      <hr>
+
+      <div class="user-name-container row" style="font-size:1.5em;">
+        <% if (user.media_path == null) { %>
+          <div clas="col s5"><i class="large material-icons" style="vertical-align:middle;float:left;">account_circle</i></div>
+        <% } else { %>
+          <div class="col s5"><img src="<%=user.media_path + user._id %>" class="responsive-img" style="vertical-align:middle;max-height:140px;"></div>
+        <% } %>
+        <div class="col s7" style="text-align:right;">
+          <div style=""> <%=cap(user.fname) %> </div>
+        </div>
+      </div>
+
+      <% if(user.group === 'admin') { %>
+        <hr>
+        <a href="/pre_applications" class="btn-floating btn-small waves-effect waves-light green accent-3">
+          <i class="material-icons" style="color:black;">folder_open</i>
+        </a>
+      <% } %>
+
+    <% } %>
+
+    <hr>
+
+    <div class="sort-header" style="font-size:1.2em; text-align:right;">
+      <i class="small material-icons" style="vertical-align:middle;float:left;">sort</i>
+      <span style="margin-right:20px;">Sort By...</span>
+    </div>
+
+    <br>
+
+    <div class="sort-content" style="text-align:left; color:#33691e">
+      <a href="/applications/sort/price_hl">Price Low-High</a> <br>
+      <a href="/applications/sort/price_lh">Price High-Low</a> <br>
+      <a href="/applications/sort/newest">Newest</a> <br>
+      <a href="/applications">Alphabetical</a> <br>
+      <a href="/applications/sort/reverse_alpha">Reverse Alphabetical</a>
+    </div>
+
+    <hr>
+
+    <div class="filter-header" style="font-size:1.2em; text-align: right;">
+      <i class="small material-icons" style="vertical-align:middle;float:left;">filter_list</i>
+      <span style="margin-right:20px">Filter By...</span>
+    </div>
+
+    <br>
+
+    <div class="filter-content" style="text-align:left; color:#33691e">
+      Platform <br>
+      <a class="filter-element" href="/applications/platform/linux"> <span class="platform-img"><img src="/public/assets/icon_platform_linux_dark.png"> </span> </a>
+      <a class="filter-element" href="/applications/platform/macos"> <span class="platform-img"><img src="/public/assets/icon_platform_mac_dark.png"> </span> </a>
+      <a class="filter-element" href="/applications/platform/windows"> <span class="platform-img"><img src="/public/assets/icon_platform_win_dark.png"> </span> </a> <br>
+      Genre <br>
+      <a class="filter-element" href="/applications/genre/rpg">RPG</a> <br>
+      <a class="filter-element" href="/applications/genre/fps">FPS</a> <br>
+      <a class="filter-element" href="/applications/genre/action">Action</a> <br>
+      <a class="filter-element" href="/applications/genre/adventure ">Adventure</a> <br>
+      <a class="filter-element" href="/applications/genre/casual">Casual</a> <br>
+      <a class="filter-element" href="/applications/genre/strategy">Strategy</a> <br>
+      Popular Tags <br>
+      <% let tags = []; let tag_count = 0;
+      for (let i in applications) {
+         for (tag of applications[i].tags) {
+           if (tag_count > 20) break
+           if (! tags.includes(tag)) {
+             tags.push(tag)
+             tag_count++
+          }
+        }
+      }%>
+      <div class="app-tags">
+      <% for (tag of tags) {%>
+        <a href="/applications/tags/<%=tag%>"> <div class="tag blue darken-3 z-depth-1"> <%=cap(tag) %> </div> </a>
+      <%}%>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="row nav-wrapper blue-grey darken-3">
+    <div class="col s1">
+      <button class="btn-floating btn-large waves-effect waves-light menu" style="z-index:2;" onclick="toggleMenu()"><i class="material-icons menu-icon">menu</i></button>
+    </div>
+    <div class="col s2">
+      <a class="logo" href="/applications">v_Repo</a>
+    </div>
+
+    <div class="col s8 input-field">
+      <i class="material-icons prefix">search</i>
+      <input type="text" id="autocomplete-input" class="autocomplete">
+      <label for="autocomplete-input">Search</label>
+    </div>
+  </div>
+</nav>
+
+<% if(success_msg != '') { %>
+  <div class="row" style="position:absolute; z-index:3;">
+    <div id="success_msg" class="col s8 offset-s12 card green accent-3" style="text-align:center;color:black;opacity:0.9;">
+      <%= success_msg %>
+    </div>
+  </div>
+<% } %>
+
+<% if(error != '') { %>
+<div class="row" style="position:absolute; z-index:3;">
+  <div id="success_msg" class="col s8 offset-s12 card red accent-3" style="text-align:center;color:black;opacity:0.9;">
+    <%= error %>
+  </div>
+</div>
+<% } %>
+
+<div class="body">
+<div class="top-container row">
+  <a class="btn-floating btn-large waves-effect waves-light blue" href="/pre_application_form">
+    <i class="material-icons">add</i>
+  </a>
+</div>
+
+<div class="container">
+  <div class="cards">
+    <%for (let i in applications) {%>
+      <% let id = applications[i]._id %>
+
+      <a href="/applications/id/<%= id %>">
+        <div class="card-panel blue-grey darken-1" href="/applications/id/<%= id %>">
+
+          <div class="card-image-container waves-block waves-light waves-effect">
+            <img class="main-image" src="/public/media/<%= id %>" alt="">
+          </div>
+
+          <span class="card-title"> <%=cap(applications[i].title) %> </span>
+
+          <span class="app-desc">
+            <p class="truncate"> <%=applications[i].desc %> </p>
+          </span>
+
+          <div class="app-tags">
+            <% let tag_count = 0 %>
+            <%for (tag of applications[i].tags) {%>
+              <% tag_count++; %>
+              <a href="/applications/tags/<%=tag%>"> <div class="tag blue darken-3 z-depth-1"> <%=cap(tag) %> </div> </a>
+              <%if (tag_count == 2) {%> <br> <%}%>
+              <%if (tag_count == 4) {%>
+                <% break %>
+              <%}%>
+            <%}%>
+          </div>
+
+          <div class="price-plat-container">
+            <% var price = applications[i].price %>
+            <% if(price < 10) {%>
+              <span class="app-price" style="color: #76ff03"> <%=price %> </span>
+            <%} else {%>
+              <span class="app-price"> <%=price %> </span>
+            <%}%>
+
+            <span class="app-platforms">
+              <%for (let platform of applications[i].platform) {%>
+                <%if (platform == 'linux') {%>
+                  <a href="/applications/platform/linux"> <span class="platform-img"><img src="/public/assets/icon_platform_linux.png"> </span> </a>
+                <%}%>
+                <%if (platform == 'macos') {%>
+                  <a href="/applications/platform/macos"> <span class="platform-img"><img src="/public/assets/icon_platform_mac.png"> </span> </a>
+                <%}%>
+                <%if (platform == 'windows') {%>
+                  <a href="/applications/platform/windows"> <span class="platform-img"><img src="/public/assets/icon_platform_win.png"> </span> </a>
+                <%}%>
+              <%}%>
+            </span>
+
+          </div>
+        </div>
+      </a>
+    <%}%>
+  </div>
+</div>
+</div>
+
+<style>
+  .side-nav {
+    padding-top: 60px;
+    opacity: 0.9;
+  }
+  .side-nav * {
+    color: black;
+  }
+  .filter-element {
+    margin-left:10px;
+  }
+  .filter-element:hover {
+    color: green;
+  }
+  .sort-content a:hover {
+    color: green;
+  }
+
+  .top-container {
+    height: 60px;
+    width: 80%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .container {
+    width: 90%;
+  }
+
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+  }
+  .card-panel {
+    position: relative;
+    /* width: 200px; */
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 1000px) {
+    .card-panel {
+      width: 325px;
+    }
+  }
+  @media screen and (min-width: 1000px) {
+    .card-panel {
+      width: 300px;
+    }
+  }
+
+  .card-image-container {
+    text-align: center;
+  }
+
+  .main-image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .card-title {
+    font-size: 1.3em;
+  }
+
+  .price-plat-container {
+    margin-top: 15px;
+  }
+  .app-price {
+    font-size: 1.3em;
+  }
+  .app-platforms {
+    float: right;
+  }
+  .platform-img {
+    height: 20px;
+  }
+
+  .app-tags {
+    text-align: center;
+    margin: auto;
+    width: 80%;
+  }
+  .tag {
+    color: white;
+    display: inline-block;
+    padding: 3px;
+    margin: 5px 10px 5px 0px;
+    transition: transform 300ms cubic-bezier(0, 0, 0, 1);
+  }
+  .tag:hover {
+    transform: scaleX(1.1) scaleY(1.1);
+  }
+  * {
+    color: white;
+  }
+</style>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous">
+</script>
+
+<script>
+$(".side-nav").hide()
+
+$("#autocomplete-input").keyup(function(event) {
+  if (event.keyCode === 13) {
+      location.href = '/applications/title/'+$('#autocomplete-input').val();
+  }
+});
+
+$("#signup").click(function(e) {
+  e.preventDefault();
+  location.href = '/user/signup'
+});
+
+
+$(document).ready( () => {
+  $("#success_msg").delay(8000).fadeOut()
+  $("#error-msg").delay(8000).fadeOut()
+})
+
+const toggleMenu = () => {
+  $(".side-nav").toggle()
+}
+
+$('.body').click( () => {
+  $(".side-nav").hide()
+})
+
+</script>
