@@ -35,3 +35,4 @@ $mongod --dbpath=.data/db --port 27018
 ```bash
 $npm run start
 ```
+The project will be run locally and you can access it at localhost:3000

@@ -59,11 +59,14 @@ const user_route = require('./routes/api/user');
 const pre_application_route = require('./routes/api/pre_applications');
 const pre_application_form_route = require('./routes/api/pre_application_form');
 
-app.use('/', application_route)
+// app.use('/', application_route)
 app.use('/applications', application_route);
 app.use('/pre_applications', pre_application_route);
 app.use('/user', user_route);
 app.use('/pre_application_form', pre_application_form_route);
+app.use(express.Router().get('/', async (req, res) => {
+  res.redirect('/applications')
+}))
 
 // Server
 const PORT = process.env.PORT || 3000;
