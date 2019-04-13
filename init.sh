@@ -20,5 +20,5 @@ echo -e "\e[97m\n\n\nRun the following commands in the ROOT of the project:\n\
 1) \e[97mEnsure a mongodb session is running. Read the README if you can't figure this out\n\
 2) In a separate session (use tmux or ssh again):\n\
    \e[92malias node='./node_modules/node/bin/node'\n\
-   \e[92mPORT = XXXXX npm run start \e[93m(where XXXXX is some high port that no processes are listening on. e.g. 65499, 65500, etc.)\n\
+   \e[92mPORT=XXXXX npm run start \e[93m(where XXXXX is some high port that no processes are listening on. e.g. 65499, 65500, etc.)\n\
 \e[97m3) If all is well, the project is running and you can access it at \e[96m134.53.148.193:XXXXX\e[97m assuming you are on miami's network"
