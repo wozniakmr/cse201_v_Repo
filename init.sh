@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-alias node='./node_modules/node/bin/node'
+NODE=./node_modules/node/bin/node
 echo -e "\e[91mRemoving all images in /public/media and /public/users"
 find ./public/media/ -type f -not -name '*.git*' | xargs rm
 find ./public/users/ -type f -not -name '*.git*' | xargs rm
@@ -7,7 +7,7 @@ find ./public/users/ -type f -not -name '*.git*' | xargs rm
 echo -e "\e[32mEnsure a mongodb server is running in local project: \e[97mmongod \
 --dbpath=.data/db --port 27018\e[39m"
 mongo localhost:27018/vrepo_db --eval "db.dropDatabase();"
-node db_seed.js
+$NODE db_seed.js
 
 echo -e "\e[96mPassword for all seeded users is: \e[92m'pass'\e[96m.\n\
 Useful usernames are: \e[92mtestadmin, testmod, testuser1, testuser2"
