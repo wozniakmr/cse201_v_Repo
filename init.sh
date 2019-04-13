@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+alias node='./node_modules/node/bin/node'
 echo -e "\e[91mRemoving all images in /public/media and /public/users"
 find ./public/media/ -type f -not -name '*.git*' | xargs rm
 find ./public/users/ -type f -not -name '*.git*' | xargs rm
