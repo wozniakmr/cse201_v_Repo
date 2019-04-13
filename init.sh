@@ -16,7 +16,7 @@ mongo localhost:27018/vrepo_db --eval "db.users.find({ uname: {\$in: \
 
 echo -e "\e[91mEnd Database Seeding"
 echo -e "\e[97m\n\n\nRun the following commands in the ROOT of the project:\n\
-1) \e[92mmongod --dbpath .data/db --port 27018 \e[93m(if this doesn't run, try a slightly higher port e.g. 27019,27020...)\e[97m\n\
+1) \e[97mEnsure a mongodb session is running. Read the README if you can't figure this out\n\
 2) In a separate session (use tmux or ssh again):\n\
    \e[92malias node='./node_modules/node/bin/node'\n\
    \e[92mPORT = XXXXX npm run start \e[93m(where XXXXX is some high port that no processes are listening on. e.g. 65499, 65500, etc.)\n\

@@ -26,8 +26,12 @@ nodejs and npm. I think npm distributes node with their sofware so you should tr
 
 ### Running
 
-1. Run __init.sh__ to seed the database
-2. Read the message printed out by this script at the bottom. Follow its instructions. Basically,
+1. Ensure a mongodb session is running in a separate/detached session if one isn't running already. This __always__ needs to be running.
+```
+mongod --dbpath .data/db --port 27018
+```
+2. Run __init.sh__ to seed the database
+3. Read the message printed out by this script at the bottom. Follow its instructions. Basically,
 you need to start the mongodb server in a separate session,
 alias node to our local binary in /node_modules because the global binary on ceclnx is outdated,
 then npm run start while specifying a port number as an env variable (e.g. PORT=65400 npm run start)
