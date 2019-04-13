@@ -21,17 +21,24 @@ __admin:__
 
 ### Dependencies
 
+__If you are running this on Miami's ceclnx server, you do not need to install these.__
+
 All node modules are included in this repository, so the only dependencies necessary to run this project are
-nodejs and npm. I think npm distributes node with their sofware so you should try that. [link](https://www.npmjs.com/get-npm)
+nodejs and npm. I think npm distributes node with their sofware so you should try that. 
+[link](https://www.npmjs.com/get-npm).
 
 ### Running
-
-1. Ensure a mongodb session is running in a separate/detached session if one isn't running already. This __always__ needs to be running.
+1. Ensure a mongodb session is running in a session if one isn't running already. 
+This __always__ needs to be running. Replace XXXXX with a port like 27018, 27019, 27020, 27021, etc.
 ```
-mongod --dbpath .data/db --port 27018
+mongod --dbpath .data/db --port XXXXX
 ```
-2. Run __init.sh__ to seed the database
-3. Read the message printed out by this script at the bottom. Follow its instructions. Basically,
-you need to start the mongodb server in a separate session,
-alias node to our local binary in /node_modules because the global binary on ceclnx is outdated,
-then npm run start while specifying a port number as an env variable (e.g. PORT=65400 npm run start)
+2. If this is your first time running the project or you'd like to clear the database, in a session outside
+of the session running your mongodb server, run init.sh 
+```
+./init.sh
+```
+3. To serve the project, run run.sh. Read its output to get the url it's being served to.
+```
+./run.sh
+```
