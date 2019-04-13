@@ -1,4 +1,4 @@
-# CSE201 vRepo 
+# CSE201 vRepo
 
 ### Description
 
@@ -26,13 +26,8 @@ nodejs and npm. I think npm distributes node with their sofware so you should tr
 
 ### Running
 
-1. Run __init.sh__ to populate user credentials
-2. In the root of the project: 
-```bash
-$mongod --dbpath=.data/db --port 27018
-```
-3. In another terminal/session in the root of the project:
-```bash
-$npm run start
-```
-The project will be run locally and you can access it at localhost:3000
+1. Run __init.sh__ to seed the database
+2. Read the message printed out by this script at the bottom. Follow its instructions. Basically,
+you need to start the mongodb server in a separate session,
+alias node to our local binary in /node_modules because the global binary on ceclnx is outdated,
+then npm run start while specifying a port number as an env variable (e.g. PORT=65400 npm run start)
