@@ -22,4 +22,4 @@ mongo localhost:$MONGODB_PORT/vrepo_db --eval "db.users.find({ uname: {\$in: \
 ['testadmin', 'testmod', 'testuser1', 'testuser2']} }).pretty()"
 
 echo -e "\e[91mEnd Database Seeding"
-echo -e "\e[97m\nIf this was successful, you should now run \e[96mrun.sh"
+echo -e "\e[97m\nIf this was successful, you should now run \e[96mrun.sh\e[0m"
