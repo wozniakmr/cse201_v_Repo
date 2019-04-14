@@ -3,10 +3,11 @@ const capPhrase = (phrase) => {
   return phrase.trim().split(' ').map(x => x[0].toUpperCase().concat(x.substring(1, x.length))).join(' ');
 }
 const cap = (phrase) => {
-  if (phrase === 'rpg' || phrase === 'fps') {
+  if (phrase == 'rpg' || phrase == 'fps') {
     return phrase.toUpperCase()
   }
-  return phrase.split(' ').map(x => x[0].toUpperCase().concat(x.substring(1, x.length))).join(' ');
+  else
+    return phrase.split(' ').map(x => x[0].toUpperCase().concat(x.substring(1, x.length))).join(' ');
 }
 const formatDate = (date) => {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -207,7 +208,7 @@ function intToRGB(i){
   <div class="container">
     <div class="cards">
       <% let id = application._id %>
-      <% let date = application.release %>
+      <% let date = formatDate(application.release) %>
       <% let hyperlink = application.hyperlink %>
       <% let developer = application.developer %>
 
@@ -234,7 +235,7 @@ function intToRGB(i){
                   <tbody>
                     <tr>
                       <td>Genre</td>
-                      <td><%= application.genre %></td>
+                      <td><%= cap(application.genre) %></td>
                     </tr>
                     <tr>
                       <td>Developer</td>
@@ -246,11 +247,11 @@ function intToRGB(i){
                     </tr>
                     <tr>
                       <td>Release</td>
-                      <td><%=date.getMonth()%>/<%=date.getDate()%>/<%=date.getFullYear()%></td>
+                      <td><%=date.substring(0,8)%></td>
                     </tr>
                     <tr>
                       <td>ESRB Rating</td>
-                      <td><%= capPhrase(application.rating) %></td>
+                      <td><%= application.rating.toUpperCase() %></td>
                     </tr>
                     <tr>
                       <td>Version</td>
@@ -258,7 +259,7 @@ function intToRGB(i){
                     </tr>
                     <tr>
                       <td>Price</td>
-                      <td>$<%= application.price %></td>
+                      <td><%= (application.price == 0.00) ? 'Free' : '$'+application.price %></td>
                     </tr>
                     <tr>
                       <td>Hyperlink</td>

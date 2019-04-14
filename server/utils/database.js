@@ -7,7 +7,25 @@ const bcrypt = require('bcrypt');
 
 mongoose.connect(config.MONGODB_URL, {useNewUrlParser: true},
   (err) => {
-    assert.equal(null, err);
+      if (err) {
+          let error_msg =
+          `
+          =====================================
+
+           Error Connecting to Mongodb server
+
+          =====================================
+          `
+          let hint =
+          `
+          Please make sure you either:
+            1) have a mongodb server running on \x1b[1m\x1b[33m${process.env.MONGODB_PORT}\x1b[1m\x1b[37m
+            2) specify the correct mongodb port number when prompted
+          `
+
+          console.log('\x1b[1m\x1b[31m%s\x1b[0m', error_msg)
+          console.log('\x1b[1m\x1b[37m%s\x1b[0m\n\n', hint)
+        }
   }
 );
 

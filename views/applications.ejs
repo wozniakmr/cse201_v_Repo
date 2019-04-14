@@ -195,9 +195,9 @@ const cap = (phrase) => {
           <div class="price-plat-container">
             <% var price = applications[i].price %>
             <% if(price < 10) {%>
-              <span class="app-price" style="color: #76ff03"> <%=price %> </span>
+              <span class="app-price" style="color: #76ff03"> <%= (price == 0.00) ? 'Free' : '$'+price %> </span>
             <%} else {%>
-              <span class="app-price"> <%=price %> </span>
+              <span class="app-price"> <%= (price == 0.00) ? 'Free' : '$'+price %> </span>
             <%}%>
 
             <span class="app-platforms">

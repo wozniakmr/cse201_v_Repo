@@ -88,7 +88,7 @@ let app1 = new Application({
   platform: ['linux', 'macos', 'windows'],
   developer: 'dennaton games',
   publisher: 'devolver digital',
-  release: new Date('01/01/10'),
+  release: new Date('1/1/10'),
   rating: 'm',
   tags: ['psychedelic', 'violent', 'indie', 'action'],
   version: '1.0',
@@ -109,11 +109,11 @@ let app2 = new Application({
   platform: ['linux', 'windows', 'macos'],
   developer: 'fistful of frags team',
   publisher: 'fistful of frags team',
-  release: new Date('01/02/10'),
+  release: new Date('1/2/10'),
   rating: 'nr',
   tags: ['free to play', 'multiplayer', 'fps', 'western', 'action'],
   version: '1.0',
-  price: 0.01,
+  price: 0.00,
   hyperlink: 'https://store.steampowered.com/app/265630/Fistful_of_Frags/',
   dateAdded: new Date(),
   media_path: null
@@ -130,7 +130,7 @@ let app3 = new Application({
   platform: ['windows'],
   developer: 'hopoo games',
   publisher: 'gearbox publishing',
-  release: new Date('01/03/10'),
+  release: new Date('1/3/10'),
   rating: 'nr',
   tags: ['early access', 'rogue-like', 'mutliplayer', 'co-op'],
   version: '1.0',
@@ -151,7 +151,7 @@ let app4 = new Application({
   platform: ['windows', 'macos', 'linux'],
   developer: 're-logic',
   publisher: 're-logic',
-  release: new Date('01/04/10'),
+  release: new Date('1/4/10'),
   rating: 'nr',
   tags: ['sandbox', 'adventure', 'survival', '2D', 'crafting'],
   version: '1.0',
@@ -172,7 +172,7 @@ let app5 = new Application({
   platform: ['windows', 'macos', 'linux'],
   developer: 'ludeon studios',
   publisher: 'ludeon studios',
-  release: new Date('01/05/10'),
+  release: new Date('1/5/10'),
   rating: 'nr',
   tags: ['base building', 'survival', 'strategy', 'sandbox', '2D'],
   version: '1.0',
@@ -189,10 +189,37 @@ app5.save().then( () => {
 
 // comments seeding with randomly selected users
 let apps = [app1, app2, app3, app4, app5]
+apps.forEach( (app) => {
+    let comment = new Comment({
+        user_id: lower_user._id,
+        app_id: app._id,
+        uname: lower_user.uname,
+        user_media_path: lower_user.media_path,
+        comment: `This is a test comment. This comment was made by ${lower_user.uname} on application ${app.title}
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+        dolore magna aliqua. Ut enim ad`
+    })
+    comment.save().then( () => {
+        console.log(`Comment made by ${lower_user.uname} on ${app.title}`)
+    })
+    comment = new Comment({
+        user_id: lower_user2._id,
+        app_id: app._id,
+        uname: lower_user2.uname,
+        user_media_path: lower_user2.media_path,
+        comment: `This is a test comment. This comment was made by ${lower_user2.uname} on application ${app.title}
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+        dolore magna aliqua. Ut enim ad`
+    })
+    comment.save().then( () => {
+        console.log(`Comment made by ${lower_user2.uname} on ${app.title}`)
+    })
+})
+
 lower_users.forEach( (user) => {
   if (Math.random() < 0.75) {
     apps.forEach( (app) => {
-      if (Math.random() < 0.75) {
+      if (Math.random() < 0.5) {
         let comment = new Comment({
           user_id: user._id,
           app_id: app._id,

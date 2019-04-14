@@ -2,9 +2,11 @@
 NODE=./node_modules/node/bin/node
 
 # we do this incase user is executing this script on a session without the MONGODB_PORT env var
-echo -e "On which port is your mongodb server listening? (Something like \e[93m27018, 27019, 27020,\e[0m etc.)"
-read input
-export MONGODB_PORT=$input
+if [ -z ${MONGODB_PORT} ]; then
+    echo -e "On which port is your \e[92mmongodb\e[0m server listening? (Something like \e[93m27018, 27019, 27020, \e[0m etc.)"
+    read input
+    export MONGODB_PORT=$input
+fi
 
 echo -e "\e[91mRemoving all images in /public/media and /public/users"
 find ./public/media/ -type f -not -name '*.git*' | xargs rm
@@ -22,4 +24,4 @@ mongo localhost:$MONGODB_PORT/vrepo_db --eval "db.users.find({ uname: {\$in: \
 ['testadmin', 'testmod', 'testuser1', 'testuser2']} }).pretty()"
 
 echo -e "\e[91mEnd Database Seeding"
-echo -e "\e[97m\nIf this was successful, you should now run \e[96mrun.sh\e[0m"
+echo -e "\e[97m\nIf this was successful, you should now run \e[96mrun.sh\e[0m\n\n"
