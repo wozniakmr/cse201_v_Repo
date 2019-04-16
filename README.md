@@ -33,8 +33,7 @@ session in a detached tmux session with id 0.
 ```
 ./db.sh start
 ```
-2. If this is your first time running the project or you'd like to clear the database, in a session outside
-of the session running your mongodb server, run init.sh 
+2. If this is your first time running the project or you'd like to clear the database, run init.sh 
 ```
 ./init.sh
 ```
