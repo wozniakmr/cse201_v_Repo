@@ -134,9 +134,10 @@ async function loadAllApplicationsMatching(key, val) {
 }
 
 async function searchByTags(val_arr) {
+  let regexes = val_arr.map(x => new RegExp(x));
   try {
     return await Application.find(
-      { tags: { $all: val_arr } }
+      { tags: { $all: regexes } }
     )
   } catch (e) {
     throw (e)
