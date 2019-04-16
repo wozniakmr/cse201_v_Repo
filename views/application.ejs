@@ -497,7 +497,11 @@ $(".hide-comment").hide()
 
 $("#autocomplete-input").keyup(function(event) {
   if (event.keyCode === 13) {
-      location.href = '/applications/title/'+$('#autocomplete-input').val();
+      let search = $("#autocomplete-input").val().toLowerCase().split(' ')
+      if (search[0] === 'tags:')
+        location.href = `/applications/tags/${search.slice(1, search.length).join('^')}`
+      else
+        location.href = `/applications/title/${search.join(' ')}`
   }
 });
 

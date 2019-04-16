@@ -51,11 +51,19 @@ router.get('/:key/:val', async (req, res) => {
       applications: applications,
       user: req.user
     })
-  } else {
-    let applications = await loadAllApplicationsMatching(
-      req.params.key,
-      req.params.val
-    );
+  }
+  else {
+    let applications;
+    if (req.params.key == 'tags') {
+      applications = await searchByTags(req.params.val.split(' '))
+      console.log('trigger')
+    }
+    else {
+      applications = await loadAllApplicationsMatching(
+        req.params.key,
+        req.params.val
+      );
+    }
     if (applications.length == 1) {
       const ret = await loadSpecific(applications[0]._id)
       applications = await loadAllApplications()
@@ -120,6 +128,16 @@ async function loadAllApplicationsMatching(key, val) {
     return await Application.find(
       { [key]: new RegExp(val) }
     ).sort({ title: 1 });
+  } catch (e) {
+    throw (e)
+  }
+}
+
+async function searchByTags(val_arr) {
+  try {
+    return await Application.find(
+      { tags: { $all: val_arr } }
+    )
   } catch (e) {
     throw (e)
   }
