@@ -186,9 +186,50 @@ app5.save().then( () => {
   console.log("Created app5: ", app5)
 })
 
+let app6 = new Application({
+  title: 'grand theft auto v',
+  desc: "a modern action-adventure game developed and published by Rockstar Games.",
+  genre: 'action',
+  platform: ['windows', 'macos', 'linux'],
+  developer: 'rockstar games',
+  publisher: 'rockstar games',
+  release: new Date('1/6/10'),
+  rating: 'nr',
+  tags: ['free roam', 'role playing', 'adventure', 'sandbox'],
+  version: '1.0',
+  price: '34.99',
+  hyperlink: 'https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/',
+  dateAdded: new Date(),
+  media_path: null
+})
+app5.save().then( () => {
+  assoc_with_image('./db_seed_assets/gta.jpg', './public/media/', app6)
+  console.log("Created app6: ", app6)
+})
+
+let app7 = new Application({
+  title: 'rocket league',
+  desc: "soccer meets driving in the long-awaited, physics-based multiplayer-focused sequel to Supersonic Acrobatic Rocket-Powered Battle-Cars! ",
+  genre: 'sports',
+  platform: ['windows', 'macos', 'linux'],
+  developer: 'psyonix inc',
+  publisher: 'psyonix inc',
+  release: new Date('1/7/10'),
+  rating: 'nr',
+  tags: ['sports', 'driving', 'racing', 'soccer', 'multiplayer'],
+  version: '1.0',
+  price: '34.99',
+  hyperlink: 'https://store.steampowered.com/app/252950/Rocket_League/',
+  dateAdded: new Date(),
+  media_path: null
+})
+app5.save().then( () => {
+  assoc_with_image('./db_seed_assets/rocket.jpg', './public/media/', app7)
+  console.log("Created app7: ", app7)
+})
 
 // comments seeding with randomly selected users
-let apps = [app1, app2, app3, app4, app5]
+let apps = [app1, app2, app3, app4, app5, app6, app7]
 apps.forEach( (app) => {
     let comment = new Comment({
         user_id: lower_user._id,
