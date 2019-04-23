@@ -293,6 +293,7 @@ app10.save().then( () => {
 
 // comments seeding with randomly selected users
 let apps = [app1, app2, app3, app4, app5, app6, app7, app8, app9, app10]
+
 apps.forEach( (app) => {
     let comment = new Comment({
         user_id: lower_user._id,
