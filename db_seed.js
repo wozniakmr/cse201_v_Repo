@@ -218,7 +218,7 @@ let app7 = new Application({
   rating: 'nr',
   tags: ['sports', 'driving', 'racing', 'soccer', 'multiplayer'],
   version: '1.0',
-  price: '11.99',
+  price: '19.99',
   hyperlink: 'https://store.steampowered.com/app/252950/Rocket_League/',
   dateAdded: new Date(),
   media_path: null
@@ -291,8 +291,92 @@ app10.save().then( () => {
   console.log("Created app10: ", app10)
 })
 
+let app11 = new Application({
+  title: 'fallout 4',
+  desc: "Bethesda Game Studios, the award-winning creators of Fallout 3 and The Elder Scrolls V: Skyrim, welcome you to the world of Fallout 4 – their most ambitious game ever, and the next generation of open-world gaming.",
+  genre: 'rpg',
+  platform: ['windows', 'macos', 'linux'],
+  developer: 'bethesda game studios',
+  publisher: 'bethesda game studios',
+  release: new Date('1/11/10'),
+  rating: 'nr',
+  tags: ['open world', 'rpg', 'shooter', 'exploration', 'post apocalyptic'],
+  version: '1.0',
+  price: '29.99',
+  hyperlink: 'https://store.steampowered.com/app/377160/Fallout_4/',
+  dateAdded: new Date(),
+  media_path: null
+})
+app11.save().then( () => {
+  assoc_with_image('./db_seed_assets/fallout4.jpg', './public/media/', app11)
+  console.log("Created app11: ", app11)
+})
+
+let app12 = new Application({
+  title: 'legal dungeon',
+  desc: "Legal Dungeon is a game about organizing Police Investigation Documents. The player must review and provide an Investigation Verdict on reports ranging from petty theft to murder, in eight different criminal cases. Weigh the value of people’s lives to unlock all the collectables.",
+  genre: 'adventure',
+  platform: ['windows', 'macos', 'linux'],
+  developer: 'somi',
+  publisher: 'somi',
+  release: new Date('1/12/10'),
+  rating: 'nr',
+  tags: ['adventure', 'indie', 'simulation'],
+  version: '1.0',
+  price: '6.99',
+  hyperlink: 'https://store.steampowered.com/app/1013750/Legal_Dungeon/',
+  dateAdded: new Date(),
+  media_path: null
+})
+app12.save().then( () => {
+  assoc_with_image('./db_seed_assets/dungeon.jpg', './public/media/', app12)
+  console.log("Created app12: ", app12)
+})
+
+let app13 = new Application({
+  title: 'dodge the wall',
+  desc: "Use your brain and your dexterity to fit through the hole in The Wall!",
+  genre: 'casual',
+  platform: ['windows', 'macos', 'linux'],
+  developer: 'space dog xr',
+  publisher: 'space dog xr',
+  release: new Date('1/13/10'),
+  rating: 'nr',
+  tags: ['casual', 'indie', 'vr'],
+  version: '1.0',
+  price: '0.00',
+  hyperlink: 'https://store.steampowered.com/app/1061600/Dodge_the_Wall/',
+  dateAdded: new Date(),
+  media_path: null
+})
+app13.save().then( () => {
+  assoc_with_image('./db_seed_assets/dodge.jpg', './public/media/', app13)
+  console.log("Created app13: ", app13)
+})
+
+let app14 = new Application({
+  title: 'planes attack',
+  desc: "Your homeland sky is under attack. Will you defend it?",
+  genre: 'casual',
+  platform: ['windows', 'macos', 'linux'],
+  developer: 'srs games',
+  publisher: 'srs games',
+  release: new Date('1/14/10'),
+  rating: 'nr',
+  tags: ['casual', 'indie', 'simulation', 'planes'],
+  version: '1.0',
+  price: '6.99',
+  hyperlink: 'https://store.steampowered.com/app/1053000/PLANES_ATTACK/',
+  dateAdded: new Date(),
+  media_path: null
+})
+app14.save().then( () => {
+  assoc_with_image('./db_seed_assets/planes.jpg', './public/media/', app14)
+  console.log("Created app14: ", app14)
+})
+
 // comments seeding with randomly selected users
-let apps = [app1, app2, app3, app4, app5, app6, app7, app8, app9, app10]
+let apps = [app1, app2, app3, app4, app5, app6, app7, app8, app9, app10, app11, app12, app13, app14]
 
 apps.forEach( (app) => {
     let comment = new Comment({
